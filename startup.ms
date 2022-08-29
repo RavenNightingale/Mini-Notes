@@ -10,7 +10,7 @@ newNote = function()
 
 		if pressed.code == 10 then break
 		
-		console.print pressed
+		console.row = 0; console.print pressed
 		Notes.push pressed
 	end while
 
@@ -26,7 +26,7 @@ NewFile = function()
 
 		if pressed.code == 10 then break
 		
-		console.print pressed
+		console.row = 0; console.print pressed
 		Nname.push pressed	
 	end while
 
@@ -52,10 +52,10 @@ text = console
 
 getKeys = function(pressed)
 	console.delimiter = ""
-	console.row = 10; console.column = 0; console.print "Type ''exit'' to close"
-	console.row = 9; console.column = 0; console.print "Or ''new file'' to write notes!"
+	console.row = 10; console.print "Type ''exit'' to close"
+	console.row = 9; console.print "Or ''new file'' to write notes!"
 	
-	console.row = 0; console.column = 0; console.print pressed
+	console.row = 1; console.print pressed
 
 	if pressed.code == 10 then
 		commands = commands.join("")
