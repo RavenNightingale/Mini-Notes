@@ -52,7 +52,10 @@ text = console
 
 getKeys = function(pressed)
 	console.delimiter = ""
-	console.print pressed
+	console.row = 10; console.column = 0; console.print "Type ''exit'' to close"
+	console.row = 9; console.column = 0; console.print "Or ''new file'' to write notes!"
+	
+	console.row = 0; console.column = 0; console.print pressed
 
 	if pressed.code == 10 then
 		commands = commands.join("")
@@ -71,8 +74,6 @@ getKeys = function(pressed)
 end function
 
 while true
-	console.column = 0; console.row = 10; print "Type ''exit'' to close"
-	console.column = 0; console.row = 9; print "Or ''new file'' to write notes!" 
 	getKeys(key.get)
 	yield
 end while
