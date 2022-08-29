@@ -1,10 +1,16 @@
 Notes = []
 
+howTo3 = function()
+	console.row = 0; console.print "Type your note here: "
+end function
+
 newNote = function()
 	console.delimiter = char(13)
 	console.print ""
 	console.delimiter = ""
 	
+	howTo3
+
 	while true
 		pressed = key.get
 
@@ -20,7 +26,14 @@ end function
 
 Nname = []
 
+howTo2 = function()
+	console.row = 0	; console.print "Enter a file name: "
+end function
+
 NewFile = function()
+
+	howTo2
+
 	while true
 		pressed = key.get
 
@@ -52,10 +65,8 @@ text = console
 
 getKeys = function(pressed)
 	console.delimiter = ""
-	console.row = 10; console.print "Type ''exit'' to close"
-	console.row = 9; console.print "Or ''new file'' to write notes!"
 	
-	console.row = 1; console.print pressed
+	console.row = 0; console.print pressed
 
 	if pressed.code == 10 then
 		commands = commands.join("")
@@ -72,6 +83,13 @@ getKeys = function(pressed)
 
 	commands.push pressed
 end function
+
+howTo = function()
+	console.row = 10; console.print "Type ''exit'' to close"
+	console.row = 9; console.print "Or ''new file'' to write notes!"
+end function
+
+howTo
 
 while true
 	getKeys(key.get)
