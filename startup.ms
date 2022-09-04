@@ -31,26 +31,36 @@ howTo2 = function()
 end function
 
 NewFile = function()
-
 	howTo2
 
 	while true
 		pressed = key.get
 
 		if pressed.code == 10 then break
-		
+
+		Nname.push pressed
 		console.row = 0; console.print pressed
-		Nname.push pressed	
 	end while
 
 	Nname = Nname.join("")
 
 	Fname = file.open(Nname + ".txt", "w")
 	Fname.write newNote
+	console.column = 0; console.row = 10; console.print "New file created!"
 	Fname.close
 
 	globals.Notes = []
 	globals.Nname = []
+	return
+end function
+
+howTo = function()
+	console.delimiter = char(13)
+	console.delimiter = ""
+
+	console.column = 0; console.row = 10; console.print "Type ''exit'' to close"
+	console.column = 0; console.row = 9; console.print "Or ''new file'' to write notes!"
+	console.column = 0; console.row = 0; console.print ":> "
 end function
 
 commands = []
@@ -65,7 +75,7 @@ text = console
 
 getKeys = function(pressed)
 	console.delimiter = ""
-	
+
 	console.row = 0; console.print pressed
 
 	if pressed.code == 10 then
@@ -82,11 +92,6 @@ getKeys = function(pressed)
 	end if
 
 	commands.push pressed
-end function
-
-howTo = function()
-	console.row = 10; console.print "Type ''exit'' to close"
-	console.row = 9; console.print "Or ''new file'' to write notes!"
 end function
 
 howTo
