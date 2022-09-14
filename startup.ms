@@ -2,7 +2,7 @@ main = {}
 
 main.console = new TextDisplay
 
-main.init = function()
+main.init = function() //main initializer
     for i in range(0,7)
         if displayMode.str(display(i).mode) != "off" then display(i).mode = displayMode.off
     end for
@@ -27,14 +27,19 @@ end function
 main.newName = []
 main.dump = []
 
-main.mkFile = function()
+main.mkFile = function() //creates new file
+    self.console.delimiter = char(13)
+    self.console.print "New file saved!"
+    self.console.delimiter = ""
     self.dump = self.dump.remove(char(5))
     note = file.open(self.newName + ".txt", "w")
     note.write self.dump
     note.close
+    self.newName = []
+    self.dump = []
 end function
 
-main.noteData = function()
+main.noteData = function() //writes data to file data list
     self.noteDisp2
     text = self.console
 
@@ -61,7 +66,7 @@ main.noteData = function()
     end while
 end function
 
-main.newNote = function()    
+main.newNote = function() //writes name to file list
     self.noteDisp1
 
     while true
@@ -97,7 +102,7 @@ end function
 
 main.commands = []
 
-main.getKeys = function(pressed)
+main.getKeys = function(pressed) //grabs user keys
     if pressed.code == 8 and self.commands.len == 0 then return
     
     self.console.print pressed
@@ -123,7 +128,7 @@ main.getKeys = function(pressed)
     self.commands.push pressed
 end function
 
-main.start = function()
+main.start = function() //program starter
     self.init
     self.Disp
 
