@@ -12,6 +12,7 @@ end function
 main.noteDisp2 = function()
     self.console.delimiter = char(13)
     self.console.print "Enter your note here."
+    self.console.print "Or press 'end' to save and return."
     self.console.delimiter = ""
     self.console.print ">:"
 end function
@@ -27,6 +28,7 @@ main.newName = []
 main.dump = []
 
 main.mkFile = function()
+    self.dump = self.dump.remove(char(5))
     note = file.open(self.newName + ".txt", "w")
     note.write self.dump
     note.close
