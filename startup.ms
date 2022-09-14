@@ -1,102 +1,134 @@
-Notes = []
+main = {}
 
-howTo3 = function()
-	console.row = 0; console.print "Type your note here: "
+main.console = new TextDisplay
+
+main.init = function()
+    for i in range(0,7)
+        if displayMode.str(display(i).mode) != "off" then display(i).mode = displayMode.off
+    end for
+    self.console.install 0
 end function
 
-newNote = function()
-	console.delimiter = char(13)
-	console.print ""
-	console.delimiter = ""
-	
-	howTo3
-
-	while true
-		pressed = key.get
-
-		if pressed.code == 10 then break
-		
-		console.row = 0; console.print pressed
-		Notes.push pressed
-	end while
-
-	Notes = Notes.join("")
-	return Notes
+main.noteDisp2 = function()
+    self.console.delimiter = char(13)
+    self.console.print "Enter your note here."
+    self.console.delimiter = ""
+    self.console.print ">:"
 end function
 
-Nname = []
-
-howTo2 = function()
-	console.row = 0	; console.print "Enter a file name: "
+main.noteDisp1 = function()
+    self.console.delimiter = char(13)
+    self.console.print "Enter note name here."
+    self.console.delimiter = ""
+    self.console.print ">:"
 end function
 
-NewFile = function()
-	howTo2
+main.newName = []
+main.dump = []
 
-	while true
-		pressed = key.get
-
-		if pressed.code == 10 then break
-
-		Nname.push pressed
-		console.row = 0; console.print pressed
-	end while
-
-	Nname = Nname.join("")
-
-	Fname = file.open(Nname + ".txt", "w")
-	Fname.write newNote
-	console.column = 0; console.row = 10; console.print "New file created!"
-	Fname.close
-
-	globals.Notes = []
-	globals.Nname = []
-	return
+main.mkFile = function()
+    note = file.open(self.newName + ".txt", "w")
+    note.write self.dump
+    note.close
 end function
 
-howTo = function()
-	console.delimiter = char(13)
-	console.delimiter = ""
+main.noteData = function()
+    self.noteDisp2
+    text = self.console
 
-	console.column = 0; console.row = 10; console.print "Type ''exit'' to close"
-	console.column = 0; console.row = 9; console.print "Or ''new file'' to write notes!"
-	console.column = 0; console.row = 0; console.print ":> "
+    while true
+        if key.pressed("end") then
+            self.dump = self.dump.join("")
+            self.mkFile
+            return
+        end if
+        
+        pressed = key.get
+        if pressed.code == 8 and self.dump.len == 0 then continue
+    
+        self.console.print pressed
+    
+        if pressed.code == 8 then
+            self.dump.pop
+            self.console.setCell(self.console.column, self.console.row, char(8))
+            continue
+        end if
+        
+        self.dump.push pressed
+        yield
+    end while
 end function
 
-commands = []
+main.newNote = function()    
+    self.noteDisp1
 
-for i in range(0,7)
-    if displayMode.str(display(i).mode) != "off" then display(i).mode = displayMode.off
-end for
+    while true
+        pressed = key.get
+        if pressed.code == 8 and self.newName.len == 0 then continue
+    
+        self.console.print pressed
+    
+        if pressed.code == 8 and pressed then
+            self.newName.pop
+            self.console.setCell(self.console.column, self.console.row, char(8))
+            continue
+        end if
 
-console = new TextDisplay
-console.install 0
-text = console
-
-getKeys = function(pressed)
-	console.delimiter = ""
-
-	console.row = 0; console.print pressed
-
-	if pressed.code == 10 then
-		commands = commands.join("")
-
-		if commands == "exit" then
-			exit
-		else if commands == "new file" then
-			NewFile
-		end if
-
-		globals.commands = []
-		return
-	end if
-
-	commands.push pressed
+        if pressed.code == 10 then
+            self.newName = self.newName.join("")
+            self.noteData
+            return
+        end if
+        
+        self.newName.push pressed
+        yield
+    end while
 end function
 
-howTo
+main.Disp = function()
+    self.console.delimiter = char(13)
+    self.console.print "Type 'new note' to begin."
+    self.console.print "Or 'exit' to quit."
+    self.console.delimiter = ""
+    self.console.print ">:"
+end function
 
-while true
-	getKeys(key.get)
-	yield
-end while
+main.commands = []
+
+main.getKeys = function(pressed)
+    if pressed.code == 8 and self.commands.len == 0 then return
+    
+    self.console.print pressed
+    
+    if pressed.code == 8 then
+        self.commands.pop
+        self.console.setCell(self.console.column, self.console.row, char(8))
+        return
+    end if
+
+    if pressed.code == 10 then
+        self.commands = self.commands.join("")
+        if self.commands == "exit" then
+            exit
+        else if self.commands == "new note" then
+           self.newNote
+        end if
+        self.Disp
+        self.commands = []
+        return
+    end if
+
+    self.commands.push pressed
+end function
+
+main.start = function()
+    self.init
+    self.Disp
+
+    while true
+        self.getKeys(key.get)
+        yield
+    end while
+end function
+
+main.start
