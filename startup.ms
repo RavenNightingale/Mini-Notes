@@ -32,7 +32,7 @@ main.mkFile = function() //creates new file
     self.console.print "New file saved!"
     self.console.delimiter = ""
     self.dump = self.dump.remove(char(5))
-    note = file.open(self.newName + ".txt", "w")
+    note = file.open("/usr/Notes/" + self.newName + ".txt", "w")
     note.write self.dump
     note.close
     self.newName = []
@@ -137,5 +137,4 @@ main.start = function() //program starter
         yield
     end while
 end function
-
 main.start
