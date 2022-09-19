@@ -9,8 +9,91 @@ main.init = function() //main initializer
     self.console.install 0
 end function
 
+main.delNote = function()
+    options = []
+    
+    notes = file.children("/usr/notes/")
+
+    if notes.len == 0 then
+        self.console.print "No notes found!"
+        self.console.print ""
+        return
+    end if
+
+    for note in notes
+        self.console.print (notes.indexOf(note) + 1)  + ". " + note
+        self.console.print ""
+    end for
+
+    self.console.delimiter = ""
+    self.console.print ">:"
+    
+    oldcolumn = self.console.column
+
+    while true
+        pressed = key.get
+
+        if pressed.code == 8 and options.len == 0 then continue
+
+        self.console.print pressed
+
+        if pressed.code == 8 then
+            options.pop
+            self.console.setCell(self.console.column, self.console.row, char(32))
+            continue
+        end if
+
+        if pressed.code == 10 then
+            failed = false
+
+            options = options.join("")
+            
+            for character in options
+                if str(character.val) != character then
+                    failed = true
+                    continue
+                end if
+            end for
+
+            if failed then
+                self.console.delimiter = char(13)
+                self.console.print("Invalid Entry")
+                self.console.print ""
+                self.console.delimiter = ""
+                self.console.print ">:"
+
+                options = []
+                continue
+            end if
+            
+            options = options.val
+
+            file.delete "/usr/Notes/" + notes[options -1]
+            break
+        end if
+        
+        options.push pressed
+        yield
+    end while
+end function
+
+main.listNotes = function()
+    notes = file.children("/usr/notes/")
+
+    if notes.len == 0 then
+        self.console.print "no notes found!"
+        self.console.print ""
+    end if
+
+    for note in notes
+        self.console.print note
+        self.console.print ""
+    end for
+end function
+
 main.noteDisp2 = function()
     self.console.delimiter = char(13)
+    self.console.print ""
     self.console.print "Enter your note here."
     self.console.print "Or press 'end' to save and return."
     self.console.delimiter = ""
@@ -18,7 +101,6 @@ main.noteDisp2 = function()
 end function
 
 main.noteDisp1 = function()
-    self.console.delimiter = char(13)
     self.console.print "Enter note name here."
     self.console.delimiter = ""
     self.console.print ">:"
@@ -28,9 +110,12 @@ main.newName = []
 main.dump = []
 
 main.mkFile = function() //creates new file
+    self.console.print ""
     self.console.delimiter = char(13)
+    self.console.print ""
+    self.console.print ""
     self.console.print "New file saved!"
-    self.console.delimiter = ""
+    self.console.print ""
     self.dump = self.dump.remove(char(5))
     note = file.open("/usr/Notes/" + self.newName + ".txt", "w")
     note.write self.dump
@@ -44,23 +129,24 @@ main.noteData = function() //writes data to file data list
     text = self.console
 
     while true
-        if key.pressed("end") then
+        pressed = key.get
+
+        if pressed.code == 8 and self.dump.len == 0 then continue
+    
+        self.console.print pressed
+
+        if pressed.code == 5 then
             self.dump = self.dump.join("")
             self.mkFile
             return
         end if
-        
-        pressed = key.get
-        if pressed.code == 8 and self.dump.len == 0 then continue
-    
-        self.console.print pressed
     
         if pressed.code == 8 then
             self.dump.pop
             self.console.setCell(self.console.column, self.console.row, char(8))
             continue
         end if
-        
+
         self.dump.push pressed
         yield
     end while
@@ -92,10 +178,21 @@ main.newNote = function() //writes name to file list
     end while
 end function
 
+main.help = function()
+    self.console.print "Hello and welcome to Mini Notes!"
+    self.console.print "exit - exits program."
+    self.console.print ""
+    self.console.print "new note - creates a note."
+    self.console.print "delete - to remove unwanted notes."
+    self.console.print ""
+    self.console.print "notes - lists your notes."
+    self.console.print ""
+end function
+
 main.Disp = function()
     self.console.delimiter = char(13)
-    self.console.print "Type 'new note' to begin."
-    self.console.print "Or 'exit' to quit."
+    self.console.print "Type 'help' for more"
+    self.console.print "or 'exit' to quit."
     self.console.delimiter = ""
     self.console.print ">:"
 end function
@@ -104,7 +201,7 @@ main.commands = []
 
 main.getKeys = function(pressed) //grabs user keys
     if pressed.code == 8 and self.commands.len == 0 then return
-    
+
     self.console.print pressed
     
     if pressed.code == 8 then
@@ -114,11 +211,21 @@ main.getKeys = function(pressed) //grabs user keys
     end if
 
     if pressed.code == 10 then
+        self.console.delimiter = char(13)
+        self.console.print ""
         self.commands = self.commands.join("")
         if self.commands == "exit" then
             exit
+        else if self.commands == "clear" then
+            self.console.clear
+        else if self.commands == "help" then
+            self.help
         else if self.commands == "new note" then
            self.newNote
+        else if self.commands == "notes" then
+            self.listNotes
+        else if self.commands == "delete" then
+           self.delNote
         end if
         self.Disp
         self.commands = []
