@@ -12,7 +12,7 @@ end function
 main.delNote = function()
     options = []
     
-    notes = file.children("/usr/notes/")
+    notes = file.children("/usr/Notes/")
 
     if notes.len == 0 then
         self.console.print "No notes found!"
