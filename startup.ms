@@ -78,10 +78,16 @@ main.delNote = function()
 end function
 
 main.listNotes = function()
+    if not file.exists("/usr/Notes") then
+        self.console.print "No notes found!"
+        self.console.print ""
+        return
+    end if
+
     notes = file.children("/usr/notes/")
 
     if notes.len == 0 then
-        self.console.print "no notes found!"
+        self.console.print "No notes found!"
         self.console.print ""
     end if
 
