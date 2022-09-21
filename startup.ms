@@ -110,6 +110,10 @@ main.newName = []
 main.dump = []
 
 main.mkFile = function() //creates new file
+    if not file.exists("/usr/Notes") then
+        file.makedir("/usr/Notes")
+    end if
+    
     self.console.print ""
     self.console.delimiter = char(13)
     self.console.print ""
@@ -157,6 +161,7 @@ main.newNote = function() //writes name to file list
 
     while true
         pressed = key.get
+
         if pressed.code == 8 and self.newName.len == 0 then continue
     
         self.console.print pressed
