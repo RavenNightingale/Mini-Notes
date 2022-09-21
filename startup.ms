@@ -191,11 +191,10 @@ end function
 
 main.help = function()
     self.console.print "Hello and welcome to Mini Notes!"
-    self.console.print "exit - exits program."
     self.console.print ""
+    self.console.print "exit - exits program."
     self.console.print "new note - creates a note."
     self.console.print "delete - to remove unwanted notes."
-    self.console.print ""
     self.console.print "notes - lists your notes."
     self.console.print ""
 end function
