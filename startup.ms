@@ -10,6 +10,12 @@ main.init = function() //main initializer
 end function
 
 main.delNote = function()
+    if not file.exists("/usr/Notes") then
+        self.console.print "No notes found!"
+        self.console.print ""
+        return
+    end if
+    
     options = []
     
     notes = file.children("/usr/Notes/")
