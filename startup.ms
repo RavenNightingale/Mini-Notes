@@ -107,7 +107,7 @@ main.noteDisp2 = function()
     self.console.delimiter = char(13)
     self.console.print ""
     self.console.print "Enter your note here."
-    self.console.print "Or press 'end' to save and return."
+    self.console.print "Or press 'end key' to save and return."
     self.console.delimiter = ""
     self.console.print ">:"
 end function
